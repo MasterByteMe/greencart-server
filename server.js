@@ -5,6 +5,7 @@ import cors from 'cors';
 import connectDB from './configs/db.js';
 import 'dotenv/config';
 import userRouter from './routes/userRoute.js';
+import sellerRouter from './routes/sellerRoute.js';
 
 
 // app for express
@@ -28,7 +29,7 @@ app.use(cors({ origin: allowedOrigins, credentials: true })); //object - origin 
 // API route
 app.get('/', (req, res) => res.send("API is working"));
 app.use('/api/user', userRouter); //API userRouter
-
+app.use('/api/seller', sellerRouter); //API sellerRouter
 
 // start the app
 app.listen(port, () => {
