@@ -3,9 +3,11 @@ import cookieParser from 'cookie-parser';
 import express from 'express';
 import cors from 'cors';
 import connectDB from './configs/db.js';
+import connectCloudinary from './configs/cloudinary.js';
 import 'dotenv/config';
 import userRouter from './routes/userRoute.js';
 import sellerRouter from './routes/sellerRoute.js';
+import productRouter from './routes/productRoute.js';
 
 
 // app for express
@@ -16,6 +18,9 @@ const port = process.env.PORT || 4000;
 
 // connect database from db.js
 await connectDB();
+
+// connect cloudinary from cloudinary.js
+await connectCloudinary();
 
 //URL for frontend - Allow multiple origins
 const allowedOrigins = ['http://localhost:5173/'];
@@ -30,6 +35,8 @@ app.use(cors({ origin: allowedOrigins, credentials: true })); //object - origin 
 app.get('/', (req, res) => res.send("API is working"));
 app.use('/api/user', userRouter); //API userRouter
 app.use('/api/seller', sellerRouter); //API sellerRouter
+app.use('/api/product', productRouter); //API productRouter
+
 
 // start the app
 app.listen(port, () => {
