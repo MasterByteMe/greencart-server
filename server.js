@@ -8,6 +8,10 @@ import 'dotenv/config';
 import userRouter from './routes/userRoute.js';
 import sellerRouter from './routes/sellerRoute.js';
 import productRouter from './routes/productRoute.js';
+import cartRouter from './routes/cartRoute.js';
+import addressRouter from './routes/addressRoute.js';
+import orderRouter from './routes/orderRoute.js';
+
 
 
 // app for express
@@ -36,6 +40,9 @@ app.get('/', (req, res) => res.send("API is working"));
 app.use('/api/user', userRouter); //API userRouter
 app.use('/api/seller', sellerRouter); //API sellerRouter
 app.use('/api/product', productRouter); //API productRouter
+app.use('/api/cart', cartRouter); //API cartRouter
+app.use('/api/address', addressRouter); //API addressRouter
+app.use('/api/order', orderRouter); //API orderRouter
 
 
 // start the app
