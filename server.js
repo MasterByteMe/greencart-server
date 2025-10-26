@@ -33,7 +33,13 @@ const allowedOrigins = ['http://localhost:5173/'];
 // Middleware Configuration
 app.use(express.json()); //all the server request coming to this server will be passed
 app.use(cookieParser());
-app.use(cors({ origin: allowedOrigins, credentials: true })); //object - origin allowed to acces the backend
+
+// Allow your frontend origin and credentials (cookies, tokens)
+app.use(cors({
+    origin: 'http://localhost:5173',  // frontend URL
+    credentials: true,                // allow cookies and authorization headers
+}));
+
 
 // API route
 app.get('/', (req, res) => res.send("API is working"));
