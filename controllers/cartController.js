@@ -6,7 +6,8 @@ import User from "../models/User.js";
 export const updateCart = async (req, res) => {
     try {
         // Extract userId and cartItems from the request body sent by the client
-        const { userId, cartItems } = req.body;
+        const userId = req.userId;
+        const { cartItems } = req.body;
 
         // Find the user by ID and update their cart data in the database
         await User.findByIdAndUpdate(userId, { cartItems });
