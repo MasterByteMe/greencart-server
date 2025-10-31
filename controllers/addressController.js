@@ -5,8 +5,9 @@ import Address from "../models/Address.js";
 // Add Address: /api/address/add
 export const addAddress = async (req, res) => {
     try {
-        // Extract address details and userId from the request body
-        const { address, userId } = req.body;
+        // ✅ Get userId from middleware instead of body
+        const userId = req.userId;
+        const { address } = req.body;
 
         // Check if address or userId is missing
         if (!address || !userId) {
@@ -14,7 +15,7 @@ export const addAddress = async (req, res) => {
             return res.json({ success: false, message: "Missing address or user ID" });
         }
 
-        // Create a new address document in the database, linked to the user
+        // Save the address in DB with the user's ID
         await Address.create({ ...address, userId });
 
         // Send a success response after the address is saved
@@ -33,13 +34,12 @@ export const addAddress = async (req, res) => {
 // Get Address: /api/address/get
 export const getAddress = async (req, res) => {
     try {
-        // Extract userId from the request body
-        const { userId } = req.body;
+        const userId = req.userId; // get user ID from the auth middleware
 
         // Check if userId is missing
         if (!userId) {
             // Send an error response if userId is not provided
-            return res.json({ success: false, message: "User ID is required" });
+            return res.json({ success: false, message: "User not authorized" });
         }
 
         // Find all address documents in the database that belong to the given user
