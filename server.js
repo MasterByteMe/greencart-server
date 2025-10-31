@@ -38,10 +38,14 @@ const allowedOrigins = [
 
 app.use(
     cors({
-        origin: allowedOrigins,
+        origin: [
+            'http://localhost:5173',                 // for local development
+            'https://greencart-frontend.vercel.app'  // your upcoming Vercel frontend URL
+        ],
         credentials: true,
     })
 );
+
 
 // ✅ Test route
 app.get('/', (req, res) => res.send('API is working ✅'));
