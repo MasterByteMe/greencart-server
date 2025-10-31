@@ -11,47 +11,41 @@ import productRouter from './routes/productRoute.js';
 import cartRouter from './routes/cartRoute.js';
 import addressRouter from './routes/addressRoute.js';
 import orderRouter from './routes/orderRoute.js';
+import { stripeWebhooks } from './controllers/orderController.js';
 
-
-
-// app for express
 const app = express();
-
-//run the server at port 4000
 const port = process.env.PORT || 4000;
 
-// connect database from db.js
+// ✅ Connect DB and Cloudinary
 await connectDB();
-
-// connect cloudinary from cloudinary.js
 await connectCloudinary();
 
-//URL for frontend - Allow multiple origins
-const allowedOrigins = ['http://localhost:5173/'];
+// ✅ Stripe webhook
+app.post(
+    '/api/order/stripe-webhook',
+    express.raw({ type: 'application/json' }),
+    stripeWebhooks
+);
 
-
-// Middleware Configuration
-app.use(express.json()); //all the server request coming to this server will be passed
+// ✅ Regular middleware comes AFTER the webhook
+app.use(express.json());
 app.use(cookieParser());
+app.use(
+    cors({
+        origin: 'http://localhost:5173',
+        credentials: true,
+    })
+);
 
-// Allow your frontend origin and credentials (cookies, tokens)
-app.use(cors({
-    origin: 'http://localhost:5173',  // frontend URL
-    credentials: true,                // allow cookies and authorization headers
-}));
+// ✅ Normal routes
+app.get('/', (req, res) => res.send('API is working'));
+app.use('/api/user', userRouter);
+app.use('/api/seller', sellerRouter);
+app.use('/api/product', productRouter);
+app.use('/api/cart', cartRouter);
+app.use('/api/address', addressRouter);
+app.use('/api/order', orderRouter);
 
-
-// API route
-app.get('/', (req, res) => res.send("API is working"));
-app.use('/api/user', userRouter); //API userRouter
-app.use('/api/seller', sellerRouter); //API sellerRouter
-app.use('/api/product', productRouter); //API productRouter
-app.use('/api/cart', cartRouter); //API cartRouter
-app.use('/api/address', addressRouter); //API addressRouter
-app.use('/api/order', orderRouter); //API orderRouter
-
-
-// start the app
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`)
+    console.log(`Server is running on http://localhost:${port}`);
 });
