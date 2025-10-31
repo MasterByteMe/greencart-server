@@ -20,7 +20,7 @@ const port = process.env.PORT || 4000;
 await connectDB();
 await connectCloudinary();
 
-// ✅ Stripe webhook
+// ✅ Stripe webhook must be BEFORE express.json()
 app.post(
     '/api/order/stripe-webhook',
     express.raw({ type: 'application/json' }),
@@ -30,15 +30,23 @@ app.post(
 // ✅ Regular middleware comes AFTER the webhook
 app.use(express.json());
 app.use(cookieParser());
+
+// ✅ Configure CORS dynamically based on environment
+const allowedOrigins = [
+    process.env.CLIENT_URL || 'http://localhost:5173', // frontend local or deployed
+];
+
 app.use(
     cors({
-        origin: 'http://localhost:5173',
+        origin: allowedOrigins,
         credentials: true,
     })
 );
 
-// ✅ Normal routes
-app.get('/', (req, res) => res.send('API is working'));
+// ✅ Test route
+app.get('/', (req, res) => res.send('API is working ✅'));
+
+// ✅ Register all routes
 app.use('/api/user', userRouter);
 app.use('/api/seller', sellerRouter);
 app.use('/api/product', productRouter);
@@ -46,6 +54,7 @@ app.use('/api/cart', cartRouter);
 app.use('/api/address', addressRouter);
 app.use('/api/order', orderRouter);
 
+// ✅ Start the server
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+    console.log(`🚀 Server is running on port ${port} in ${process.env.NODE_ENV} mode`);
 });
