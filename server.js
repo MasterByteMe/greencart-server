@@ -40,7 +40,7 @@ app.use(
     cors({
         origin: [
             'http://localhost:5173',                 // for local development
-            'https://greencart-frontend.vercel.app'  // your upcoming Vercel frontend URL
+            'https://greencart-mr.vercel.app'  // your upcoming Vercel frontend URL
         ],
         credentials: true,
     })
